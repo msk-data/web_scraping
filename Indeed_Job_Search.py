@@ -8,11 +8,15 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+SCRAPERAPI_KEY = 'c44fbbcb4363f1808a24874749b876'        
+proxies = {
+  'http': f'http://scraperapi:{SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001',
+}
 
 def extract(page):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36'}
     url = f'https://www.indeed.com/jobs?q=data%20engineer&l=New%20York%2C%20NY&start={page}&vjk=97d70eb2f37da8d3'
-    r = requests.get(url, headers)
+    r = requests.get(url, headers, proxies=proxies, verify=False)
     soup = BeautifulSoup(r.content, 'lxml')
     return soup
 
@@ -38,8 +42,7 @@ def transform(soup):
         joblist.append(job)
     return
         
-        
-        
+
 joblist = []    
 
 for i in range(0,20,10):
@@ -53,7 +56,3 @@ df.to_csv('Indeed_Jobs_Sep.csv')
 
 
 # In[ ]:
-
-
-
-
